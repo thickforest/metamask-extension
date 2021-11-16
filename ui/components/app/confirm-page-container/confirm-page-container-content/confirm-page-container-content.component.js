@@ -43,6 +43,7 @@ export default class ConfirmPageContainerContent extends Component {
     rejectNText: PropTypes.string,
     hideTitle: PropTypes.bool,
     supportsEIP1559V2: PropTypes.bool,
+    showingHardwareConnectionContents: PropTypes.bool,
   };
 
   renderContent() {
@@ -111,6 +112,7 @@ export default class ConfirmPageContainerContent extends Component {
       setUserAcknowledgedGasMissing,
       hideUserAcknowledgedGasMissing,
       supportsEIP1559V2,
+      showingHardwareConnectionContents,
     } = this.props;
 
     const primaryAction = hideUserAcknowledgedGasMissing
@@ -135,7 +137,7 @@ export default class ConfirmPageContainerContent extends Component {
             />
           </div>
         )}
-        <ConfirmPageContainerSummary
+        {showingHardwareConnectionContents ? null : (<ConfirmPageContainerSummary
           className={classnames({
             'confirm-page-container-summary--border':
               !detailsComponent || !dataComponent,
@@ -150,7 +152,7 @@ export default class ConfirmPageContainerContent extends Component {
           nonce={nonce}
           origin={origin}
           hideTitle={hideTitle}
-        />
+        />)}
         {this.renderContent()}
         {!supportsEIP1559V2 &&
           !hasSimulationError &&
