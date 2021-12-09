@@ -430,6 +430,10 @@
   "chainIdExistsErrorMsg": {
     "message": "This Chain ID is currently used by the $1 network."
   },
+  "chainListReturnedDifferentTickerSymbol": {
+    "message": "The chain ID appears to match a different ticker symbol from the on you entered: $1",
+    "description": "$1 is the return value of nativeCurrency.symbol from chainlist.network"
+  },
   "chromeRequiredForHardwareWallets": {
     "message": "You need to use MetaMask on Google Chrome in order to connect to your Hardware Wallet."
   },
@@ -1065,6 +1069,9 @@
   },
   "failedToFetchChainId": {
     "message": "Could not fetch chain ID. Is your RPC URL correct?"
+  },
+  "failedToFetchTickerSymbolData": {
+    "message": "Ticker symbol verification data is currently unavailable, make sure that the symbol you have entered is correct. It will impact the conversion rates that you see for this network"
   },
   "failureMessage": {
     "message": "Something went wrong, and we were unable to complete the action"

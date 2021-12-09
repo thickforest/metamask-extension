@@ -256,6 +256,71 @@ const NetworksForm = ({
   };
 
   /**
+   * Validates the ticker symbol by checking it against the nativeCurrency.symbol return
+   * value from chainid.network trusted chain data
+   * Assumes that all strings are non-empty and correctly formatted.
+   *
+   * @param {string} formChainId - Non-empty, hex or decimal number string from
+   * the form.
+   * @param {string} rpcUrl - The RPC URL from the form.
+   */
+   validateTickerSymbolOnSubmit = async (formChainId, formTickerSymbol) => {
+    const { t } = this.context;
+    let errorKey;
+    let errorMessage;
+    let warningKey;
+    let warningMessage;
+    let safeChainsList;
+    let providerError;
+
+    try {
+      safeChainsList = await fetchWithCache(
+        'https://chainid.network/chains.json',
+      );
+    } catch (err) {
+      log.warn('Failed to fetch the chainList from chainid.network', err);
+      providerError = err;
+    }
+
+    if (providerError || !Array.isArray(safeChainsList)) {
+      errorKey = 'failedToFetchTickerSymbolData';
+      errorMessage = t('failedToFetchTickerSymbolData');
+    } else {
+      const matchedChain = safeChainsList?.find(
+        (chain) =>
+          chain.chainId === formChainId,
+      );
+
+      if(matchedChain === undefined){
+        errorKey = 'failedToFetchTickerSymbolData';
+        errorMessage = t('failedToFetchTickerSymbolData');
+      } else {
+        const returnedTickerSymbol = matchedChain.nativeCurrency?.symbol
+        if(returnedTickerSymbol !== formTickerSymbol){
+          warningKey = 'chainListReturnedDifferentTickerSymbol';
+          warningMessage = t('chainListReturnedDifferentTickerSymbol');
+        }
+      }
+    }
+
+    if (errorKey) {
+      this.setErrorTo('ticker', {
+        key: errorKey,
+        msg: errorMessage,
+      });
+      return false;
+    }
+
+    if(warningKey){
+      // TODO setup warning key system that doesn't block submission
+    }
+
+    this.setErrorEmpty('ticker');
+    return true;
+  };
+
+
+  /**
    * Validates the chain ID by checking it against the `eth_chainId` return
    * value from the given RPC URL.
    * Assumes that all strings are non-empty and correctly formatted.
@@ -392,6 +457,10 @@ const NetworksForm = ({
       ) {
         setIsSubmitting(false);
         return;
+      }
+
+      if(!(await this.validateTickerSymbolOnSubmit(formChainId, ticker))){
+        // TODO
       }
 
       // After this point, isSubmitting will be reset in componentDidUpdate
