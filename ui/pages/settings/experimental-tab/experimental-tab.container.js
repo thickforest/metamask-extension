@@ -20,7 +20,7 @@ const mapStateToProps = (state) => {
     useTokenDetection: getUseTokenDetection(state),
     useCollectibleDetection: getUseCollectibleDetection(state),
     openSeaEnabled: getOpenSeaEnabled(state),
-    theme: getTheme(state)
+    theme: getTheme(state),
   };
 };
 
