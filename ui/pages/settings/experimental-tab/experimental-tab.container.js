@@ -5,11 +5,13 @@ import {
   setUseTokenDetection,
   setUseCollectibleDetection,
   setOpenSeaEnabled,
+  setTheme,
 } from '../../../store/actions';
 import {
   getUseTokenDetection,
   getUseCollectibleDetection,
   getOpenSeaEnabled,
+  getTheme,
 } from '../../../selectors';
 import ExperimentalTab from './experimental-tab.component';
 
@@ -18,6 +20,7 @@ const mapStateToProps = (state) => {
     useTokenDetection: getUseTokenDetection(state),
     useCollectibleDetection: getUseCollectibleDetection(state),
     openSeaEnabled: getOpenSeaEnabled(state),
+    theme: getTheme(state)
   };
 };
 
@@ -27,6 +30,7 @@ const mapDispatchToProps = (dispatch) => {
     setUseCollectibleDetection: (val) =>
       dispatch(setUseCollectibleDetection(val)),
     setOpenSeaEnabled: (val) => dispatch(setOpenSeaEnabled(val)),
+    setTheme: (val) => dispatch(setTheme(val)),
   };
 };
 
