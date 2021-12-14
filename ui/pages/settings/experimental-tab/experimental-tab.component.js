@@ -4,7 +4,7 @@ import I18nValue from '../../../components/ui/i18n-value';
 import ToggleButton from '../../../components/ui/toggle-button';
 import Dropdown from '../../../components/ui/dropdown';
 
-import { THEME_NAMES, THEME_TYPE } from './experimental-tab.constant';
+import { THEME_TYPE } from './experimental-tab.constant';
 
 /*eslint-disable prefer-destructuring*/
 const DARK_MODE_V1 = process.env.DARK_MODE_V1;
@@ -144,12 +144,10 @@ export default class ExperimentalTab extends PureComponent {
   }
 
   renderTheme() {
-    console.log(DARK_MODE_V1);
     if (!DARK_MODE_V1) {
       return null;
     }
-
-    const { t } = this.context; 
+    const { t } = this.context;
     const { theme, setTheme } = this.props;
 
     const themesOptions = [
