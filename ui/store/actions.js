@@ -2216,6 +2216,19 @@ export function setAdvancedGasFee(val) {
   };
 }
 
+export function setTheme(val) {
+  return (dispatch) => {
+    dispatch(showLoadingIndication());
+    log.debug(`background.setMetamaskThemes`);
+    background.setTheme(val, (err) => {
+      dispatch(hideLoadingIndication());
+      if (err) {
+        dispatch(displayWarning(err.message));
+      }
+    });
+  };
+}
+
 export function setIpfsGateway(val) {
   return (dispatch) => {
     dispatch(showLoadingIndication());

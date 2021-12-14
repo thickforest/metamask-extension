@@ -1,6 +1,13 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import I18nValue from '../../../components/ui/i18n-value';
 import ToggleButton from '../../../components/ui/toggle-button';
+import Dropdown from '../../../components/ui/dropdown';
+
+import { THEME_NAMES, THEME_TYPE } from './experimental-tab.constant';
+
+/*eslint-disable prefer-destructuring*/
+const DARK_MODE_V1 = process.env.DARK_MODE_V1;
 
 export default class ExperimentalTab extends PureComponent {
   static contextTypes = {
@@ -15,6 +22,8 @@ export default class ExperimentalTab extends PureComponent {
     setUseCollectibleDetection: PropTypes.func,
     setOpenSeaEnabled: PropTypes.func,
     openSeaEnabled: PropTypes.func,
+    theme: PropTypes.string,
+    setTheme: PropTypes.func,
   };
 
   renderTokenDetectionToggle() {
@@ -134,12 +143,57 @@ export default class ExperimentalTab extends PureComponent {
     );
   }
 
+  renderTheme() {
+    console.log(DARK_MODE_V1);
+    if (!DARK_MODE_V1) {
+      return null;
+    }
+
+    const { t } = this.context; 
+    const { theme, setTheme } = this.props;
+
+    const themesOptions = [
+      {
+        name: t('defaultTheme'),
+        value: THEME_TYPE.DEFAULT,
+      },
+      {
+        name: t('darkTheme'),
+        value: THEME_TYPE.DARK,
+      },
+    ];
+
+    return (
+      <div className="settings-page__content-row">
+        <div className="settings-page__content-item">
+          <span>
+            <I18nValue messageKey="theme" />
+          </span>
+          <div className="settings-page__content-description">
+            <I18nValue messageKey="themeDescription" />
+          </div>
+        </div>
+        <div className="settings-page__content-item">
+          <div className="settings-page__content-item-col">
+            <Dropdown
+              id="select-theme"
+              options={themesOptions}
+              selectedOption={theme}
+              onChange={async (newTheme) => setTheme(newTheme)}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   render() {
     return (
       <div className="settings-page__body">
         {this.renderTokenDetectionToggle()}
         {this.renderOpenSeaEnabledToggle()}
         {this.renderCollectibleDetectionToggle()}
+        {this.renderTheme()}
       </div>
     );
   }

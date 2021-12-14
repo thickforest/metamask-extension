@@ -1139,6 +1139,7 @@ export default class MetamaskController extends EventEmitter {
       setAdvancedGasFee: preferencesController.setAdvancedGasFee.bind(
         preferencesController,
       ),
+      setTheme: preferencesController.setTheme.bind(preferencesController),
 
       // CollectiblesController
       addCollectible: collectiblesController.addCollectible.bind(
