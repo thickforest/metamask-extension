@@ -20,8 +20,10 @@ jest.mock('../../../../store/actions', () => ({
     .mockImplementation(() => Promise.resolve()),
   addPollingTokenToAppState: jest.fn(),
   removePollingTokenFromAppState: jest.fn(),
+  setAdvancedGasFee: jest.fn().mockReturnValue(() => undefined),
 }));
-
+const updateDefaultSettings = jest.fn();
+const handleUpdateDefaultSettings = jest.fn().mockReturnThis(() => undefined);
 const render = (defaultGasParams) => {
   const store = configureStore({
     metamask: {
@@ -124,5 +126,26 @@ describe('AdvancedGasFeeDefaults', () => {
     expect(
       screen.queryByText('Save these as my default for "Advanced"'),
     ).toBeInTheDocument();
+  });
+  it('handleUpdateDefaultSettings should be called when the checkboc is selected', () => {
+    render({ advancedGasFee: null });
+    expect(
+      screen.queryByText(
+        'Always use these values and advanced setting as default.',
+      ),
+    ).toBeInTheDocument();
+    fireEvent.change(document.getElementsByTagName('input')[0], {
+      target: { value: 100 },
+    });
+    fireEvent.change(document.getElementsByTagName('input')[1], {
+      target: { value: 5 },
+    });
+    expect(handleUpdateDefaultSettings).not.toHaveBeenCalled();
+    const advancedCheckbox = screen.getByRole('checkbox');
+    expect(advancedCheckbox.checked).toStrictEqual(false);
+    fireEvent.click(advancedCheckbox); // errors happens here
+    expect(advancedCheckbox.checked).toStrictEqual(true);
+    expect(updateDefaultSettings).toHaveBeenCalled();
+    expect(handleUpdateDefaultSettings).toHaveBeenCalled();
   });
 });
