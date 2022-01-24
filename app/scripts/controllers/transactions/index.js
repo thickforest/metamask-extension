@@ -1525,15 +1525,21 @@ export default class TransactionController extends EventEmitter {
 
     const gasParamsInGwei = this._getGasValuesInGWEI(gasParams);
 
+<<<<<<< HEAD
     const { eip1559V2Enabled: eip1559V2 } = this.preferencesStore.getState();
 
+=======
+>>>>>>> 59d9745b1 (merge)
     const properties = {
       chain_id: chainId,
       referrer,
       source,
       network,
       type,
+<<<<<<< HEAD
       eip1559V2,
+=======
+>>>>>>> 59d9745b1 (merge)
     };
 
     const sensitiveProperties = {
@@ -1677,7 +1683,11 @@ export default class TransactionController extends EventEmitter {
    * @param {TransactionMetaMetricsEventString} event - the name of the transaction event
    * @param {Object} extraParams - optional props and values to include in sensitiveProperties
    */
+<<<<<<< HEAD
   _trackTransactionMetricsEvent(txMeta, event, extraParams = {}) {
+=======
+  trackTransactionMetricsEvent(txMeta, event, extraParams = {}) {
+>>>>>>> 59d9745b1 (merge)
     if (!txMeta) {
       return;
     }
