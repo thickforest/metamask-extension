@@ -1,4 +1,4 @@
-import nanoid from 'nanoid';
+import { nanoid } from 'nanoid';
 import { useFakeTimers } from 'sinon';
 import stringify from 'fast-safe-stringify';
 import { constants, getters, noop } from '../../../../test/mocks/permissions';
