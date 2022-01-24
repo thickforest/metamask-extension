@@ -264,7 +264,7 @@ export default class TransactionController extends EventEmitter {
   addTransaction(txMeta) {
     this.txStateManager.addTransaction(txMeta);
     this.emit(`${txMeta.id}:unapproved`, txMeta);
-    this._trackTransactionMetricsEvent(txMeta, TRANSACTION_EVENTS.ADDED);
+    this.trackTransactionMetricsEvent(txMeta, TRANSACTION_EVENTS.ADDED);
   }
 
   /**
@@ -915,7 +915,7 @@ export default class TransactionController extends EventEmitter {
       // sign transaction
       const rawTx = await this.signTransaction(txId);
       await this.publishTransaction(txId, rawTx);
-      this._trackTransactionMetricsEvent(txMeta, TRANSACTION_EVENTS.APPROVED);
+      this.trackTransactionMetricsEvent(txMeta, TRANSACTION_EVENTS.APPROVED);
       // must set transaction to submitted/failed before releasing lock
       nonceLock.releaseLock();
     } catch (err) {
@@ -1011,7 +1011,7 @@ export default class TransactionController extends EventEmitter {
 
     this.txStateManager.setTxStatusSubmitted(txId);
 
-    this._trackTransactionMetricsEvent(txMeta, TRANSACTION_EVENTS.SUBMITTED);
+    this.trackTransactionMetricsEvent(txMeta, TRANSACTION_EVENTS.SUBMITTED);
   }
 
   /**
@@ -1070,7 +1070,7 @@ export default class TransactionController extends EventEmitter {
         // metricsParams.error = TODO: figure out a way to get the on-chain failure reason
       }
 
-      this._trackTransactionMetricsEvent(
+      this.trackTransactionMetricsEvent(
         txMeta,
         TRANSACTION_EVENTS.FINALIZED,
         metricsParams,
@@ -1112,7 +1112,7 @@ export default class TransactionController extends EventEmitter {
   async cancelTransaction(txId) {
     const txMeta = this.txStateManager.getTransaction(txId);
     this.txStateManager.setTxStatusRejected(txId);
-    this._trackTransactionMetricsEvent(txMeta, TRANSACTION_EVENTS.REJECTED);
+    this.trackTransactionMetricsEvent(txMeta, TRANSACTION_EVENTS.REJECTED);
   }
 
   /**
@@ -1525,21 +1525,15 @@ export default class TransactionController extends EventEmitter {
 
     const gasParamsInGwei = this._getGasValuesInGWEI(gasParams);
 
-<<<<<<< HEAD
     const { eip1559V2Enabled: eip1559V2 } = this.preferencesStore.getState();
 
-=======
->>>>>>> 59d9745b1 (merge)
     const properties = {
       chain_id: chainId,
       referrer,
       source,
       network,
       type,
-<<<<<<< HEAD
       eip1559V2,
-=======
->>>>>>> 59d9745b1 (merge)
     };
 
     const sensitiveProperties = {
@@ -1683,11 +1677,7 @@ export default class TransactionController extends EventEmitter {
    * @param {TransactionMetaMetricsEventString} event - the name of the transaction event
    * @param {Object} extraParams - optional props and values to include in sensitiveProperties
    */
-<<<<<<< HEAD
   _trackTransactionMetricsEvent(txMeta, event, extraParams = {}) {
-=======
-  trackTransactionMetricsEvent(txMeta, event, extraParams = {}) {
->>>>>>> 59d9745b1 (merge)
     if (!txMeta) {
       return;
     }
@@ -1718,7 +1708,7 @@ export default class TransactionController extends EventEmitter {
       // If the user rejects a transaction, finalize the transaction added
       // event fragment. with the abandoned flag set.
       case TRANSACTION_EVENTS.REJECTED:
-        id = `transaction-added-${txMeta.id}`;
+        id = `transaction-rejected-${txMeta.id}`;
         this.updateEventFragment(id, { properties, sensitiveProperties });
         this.finalizeEventFragment(id, {
           abandoned: true,
@@ -1730,6 +1720,11 @@ export default class TransactionController extends EventEmitter {
         id = `transaction-submitted-${txMeta.id}`;
         this.updateEventFragment(id, { properties, sensitiveProperties });
         this.finalizeEventFragment(`transaction-submitted-${txMeta.id}`);
+        break;
+      case TRANSACTION_EVENTS.UI_ACTION:
+        id = `transaction-ui_action-${txMeta.id}`;
+        this.updateEventFragment(id, { properties, sensitiveProperties });
+        this.finalizeEventFragment(`transaction-ui_action-${txMeta.id}`);
         break;
       default:
         break;
@@ -1755,7 +1750,7 @@ export default class TransactionController extends EventEmitter {
   _failTransaction(txId, error) {
     this.txStateManager.setTxStatusFailed(txId, error);
     const txMeta = this.txStateManager.getTransaction(txId);
-    this._trackTransactionMetricsEvent(txMeta, TRANSACTION_EVENTS.FINALIZED, {
+    this.trackTransactionMetricsEvent(txMeta, TRANSACTION_EVENTS.FINALIZED, {
       error: error.message,
     });
   }
@@ -1763,6 +1758,6 @@ export default class TransactionController extends EventEmitter {
   _dropTransaction(txId) {
     this.txStateManager.setTxStatusDropped(txId);
     const txMeta = this.txStateManager.getTransaction(txId);
-    this._trackTransactionMetricsEvent(txMeta, TRANSACTION_EVENTS.FINALIZED);
+    this.trackTransactionMetricsEvent(txMeta, TRANSACTION_EVENTS.FINALIZED);
   }
 }
